@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning Fundamentals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+/* 1. THE SETUP */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f0f2f5;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+  min-height: 100vh;
+  padding: 20px 0;
+  place-items: center;
+  margin: 0;
+}
+
+/* Slide Container */
+.slide-container {
+  align-items: center;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto", sans-serif;
+  gap: 30px;
+  height: 720px;
+  justify-content: center;
+  overflow: hidden;
+  padding: 60px;
+  position: relative;
+  width: 1280px;
+  background-color: #ffffff;
+  border-radius: 12px;
+}
+
+/* Background Accents */
+.slide-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, #0a6ed1 0%, #1e3a8a 100%); /* SAP-like Blue Gradient */
+  z-index: 0;
+}
+
+.slide-container::after {
+  content: '';
+  position: absolute;
+  bottom: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(10, 110, 209, 0.05) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.slide-container > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 2. TYPOGRAPHY */
+.slide-container h1 {
+  color: #1e3a8a; /* Dark Blue */
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0;
+  font-size: 64px;
+}
+
+.slide-container h2 {
+  color: #1e3a8a;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  font-size: 42px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 15px;
+  width: 100%;
+}
+
+.slide-container h3 {
+  color: #0a6ed1; /* Brighter Blue */
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.slide-container p,
+.slide-container li {
+  color: #475569;
+  font-family: "Roboto", sans-serif;
+  font-size: 22px;
+  line-height: 1.6;
+}
+
+.slide-container .subtitle {
+  color: #64748b;
+  font-size: 26px;
+  font-weight: 300;
+  margin-top: 20px;
+}
+
+/* 3. LAYOUT DEFINITIONS */
+.content-area {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Title Layout */
+.title-layout {
+  text-align: center;
+  max-width: 900px;
+}
+
+/* Two Column */
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+}
+
+.two-column.top-aligned {
+  align-items: start;
+}
+
+/* Images */
+.image-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  overflow: hidden;
+  width: 100%;
+  height: 380px;
+  background-color: #f8fafc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-wrapper img, .image-wrapper svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.two-column .image-wrapper img {
+  object-fit: contain;
+}
+
+/* Bleed Image Layout */
+.slide-container.bleed-image-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 0;
+  gap: 0;
+  align-items: start;
+}
+
+.slide-container.bleed-image-layout > .content-container {
+  padding: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.slide-container.bleed-image-layout > .image-container {
+  height: 100%;
+  width: 100%;
+  background-color: #f1f5f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.slide-container.bleed-image-layout img.bleed-image-side {
+  width: 100%;
+  height: 100%;
+  max-height: 720px;
+  object-fit: cover;
+}
+
+.slide-container.bleed-image-layout svg {
+    width: 90%;
+    height: 90%;
+}
+
+/* Tiles */
+.tiled-content {
+  display: flex;
+  gap: 30px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.tile {
+  background-color: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 30px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.tile .icon {
+  font-size: 48px;
+  color: #0a6ed1;
+  margin-bottom: 20px;
+}
+
+/* Lists */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  padding-left: 30px;
+  position: relative;
+  margin-bottom: 15px;
+}
+
+ul li::before {
+  content: '\f00c';
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  color: #f59e0b; /* Amber Check */
+  position: absolute;
+  left: 0;
+  top: 6px;
+  font-size: 18px;
+}
+
+/* Highlight boxes */
+.highlight-box {
+  background-color: #eff6ff;
+  border-left: 5px solid #0a6ed1;
+  padding: 20px;
+  border-radius: 0 8px 8px 0;
+  margin-top: 20px;
+}
+
+/* Formula/Code Style */
+code {
+  background-color: #e2e8f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  color: #d63384;
+}
+
+/* SVG Styles */
+.venn-circle { opacity: 0.6; mix-blend-mode: multiply; }
+.node { fill: #fff; stroke: #0a6ed1; stroke-width: 2; }
+.edge { stroke: #cbd5e1; stroke-width: 2; }
+.chart-point { fill: #0a6ed1; }
+.chart-line { fill: none; stroke: #f59e0b; stroke-width: 3; }
+.cluster-1 { fill: #0a6ed1; }
+.cluster-2 { fill: #d97706; }
+.cluster-3 { fill: #10b981; }
+
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Title -->
+<div class="slide-container" id="slide1">
+    <div class="title-layout">
+        <h1>Machine Learning Fundamentals</h1>
+        <p class="subtitle">For Future SAP AI Developers</p>
+        <div style="margin-top: 40px; border-top: 1px solid #cbd5e1; width: 200px; margin-left: auto; margin-right: auto;"></div>
+        <p style="margin-top: 20px; font-size: 18px;">Bridging Python Skills to Enterprise Intelligence</p>
+    </div>
+</div>
+
+<!-- Slide 2: Agenda -->
+<div class="slide-container" id="slide2">
+    <h2 class="slide-title">Class Roadmap</h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-brain"></i></div>
+                <h3>1. Core Concepts</h3>
+                <p>Demystifying AI, ML, Deep Learning, and how machines "learn".</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-layer-group"></i></div>
+                <h3>2. Deep Dive</h3>
+                <p>Neural Networks, Generative AI, and the techniques changing the world.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-building"></i></div>
+                <h3>3. SAP Context</h3>
+                <p>Why this matters for the Intelligent Enterprise.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: The "Why" -->
+<div class="slide-container" id="slide3">
+    <h2 class="slide-title">Why are we here?</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Connecting the Dots</h3>
+                <p>You have just spent a week learning <strong>Python</strong>. It might feel like just scripts and loops right now.</p>
+                <p>Today, we show you <strong>what that Python builds</strong>.</p>
+                <div class="highlight-box">
+                    <p style="font-weight: 500; font-size: 20px; margin: 0;">Python is the language. AI is the story. SAP is the stage.</p>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <i class="fa-brands fa-python" style="font-size: 120px; color: #306998;"></i>
+                <i class="fa-solid fa-arrow-right" style="font-size: 40px; color: #94a3b8; margin: 0 30px;"></i>
+                <i class="fa-solid fa-robot" style="font-size: 120px; color: #0a6ed1;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 4: AI Landscape -->
+<div class="slide-container" id="slide4">
+    <h2 class="slide-title">The "Russian Doll" of AI</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <ul>
+                    <li><strong>Artificial Intelligence (AI):</strong> The broad concept of machines acting smartly.</li>
+                    <li><strong>Machine Learning (ML):</strong> A subset of AI. Machines improving with experience (data).</li>
+                    <li><strong>Deep Learning (DL):</strong> A subset of ML. Using multi-layered neural networks.</li>
+                    <li><strong>Generative AI (GenAI):</strong> A subset of DL. Creating new content (text, images).</li>
+                </ul>
+            </div>
+            <div class="image-wrapper">
+                 <!-- SVG Venn Diagram -->
+                 <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+                    <!-- AI Circle -->
+                    <circle cx="200" cy="150" r="140" fill="#e0f2fe" stroke="#0a6ed1" stroke-width="2" />
+                    <text x="200" y="30" text-anchor="middle" fill="#0a6ed1" font-weight="bold">AI</text>
+                    
+                    <!-- ML Circle -->
+                    <circle cx="200" cy="170" r="100" fill="#bae6fd" stroke="#0284c7" stroke-width="2" />
+                    <text x="200" y="90" text-anchor="middle" fill="#0284c7" font-weight="bold">ML</text>
+                    
+                    <!-- DL Circle -->
+                    <circle cx="200" cy="190" r="60" fill="#7dd3fc" stroke="#0369a1" stroke-width="2" />
+                    <text x="200" y="150" text-anchor="middle" fill="#0369a1" font-weight="bold">DL</text>
+
+                    <!-- GenAI Circle -->
+                    <circle cx="200" cy="210" r="30" fill="#38bdf8" stroke="#075985" stroke-width="2" />
+                    <text x="200" y="215" text-anchor="middle" fill="#fff" font-size="10">GenAI</text>
+                 </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5: Paradigm Shift -->
+<div class="slide-container" id="slide5">
+    <h2 class="slide-title">The Paradigm Shift</h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile" style="background-color: #fff1f2; border-color: #fecdd3;">
+                <div class="icon" style="color: #be123c;"><i class="fa-solid fa-code"></i></div>
+                <h3>Traditional Coding</h3>
+                <p><strong>Rules + Data = Answers</strong></p>
+                <p style="font-size: 18px; margin-top: 10px;">You write the logic: <code>if age > 18: status = "Adult"</code></p>
+            </div>
+            <div class="tile" style="background-color: #f0fdf4; border-color: #bbf7d0;">
+                <div class="icon" style="color: #15803d;"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <h3>Machine Learning</h3>
+                <p><strong>Data + Answers = Rules</strong></p>
+                <p style="font-size: 18px; margin-top: 10px;">You give history: "Here are 1000 people and their status." The machine finds the logic.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 6: Terminology -->
+<div class="slide-container" id="slide6">
+    <h2 class="slide-title">Key Terminology</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>The Data</h3>
+                <ul>
+                    <li><strong>Features (X):</strong> The input variables. Columns in your Excel sheet (e.g., Square Footage, Location).</li>
+                    <li><strong>Labels (y):</strong> The output/target. What you want to predict (e.g., House Price).</li>
+                </ul>
+            </div>
+            <div>
+                <h3>The Process</h3>
+                <ul>
+                    <li><strong>Training:</strong> The process of the algorithm learning from data.</li>
+                    <li><strong>Model:</strong> The result of training. The "program" that can now make predictions.</li>
+                    <li><strong>Inference:</strong> Using the trained model on new, unseen data.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 7: Types of Learning -->
+<div class="slide-container" id="slide7">
+    <h2 class="slide-title">Three Main Types of Learning</h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+                <h3>Supervised</h3>
+                <p>Learning with a teacher. Data has labels (Answer Key).</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                <h3>Unsupervised</h3>
+                <p>Self-discovery. Data has no labels. Finding patterns.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-gamepad"></i></div>
+                <h3>Reinforcement</h3>
+                <p>Learning by trial & error. Rewards and Penalties.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 8: Supervised Deep Dive -->
+<div class="slide-container bleed-image-layout" id="slide8">
+    <div class="content-container">
+        <h2 class="slide-title">Supervised Learning</h2>
+        <div class="content-area">
+            <h3>The Teacher Metaphor</h3>
+            <p>Imagine teaching a child to identify fruits. You show an apple and say "Apple". You show a banana and say "Banana".</p>
+            <p>After enough examples, you show a new fruit and ask "What is this?"</p>
+            <p><strong>Business Use:</strong> Fraud detection, Price forecasting, Sentiment analysis.</p>
+        </div>
+    </div>
+    <div class="image-container">
+        <!-- Replaced with valid Unsplash URL for Teacher/Classroom -->
+        <img class="bleed-image-side" src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1000&q=80" alt="Teacher helping student representing supervised learning">
+    </div>
+</div>
+
+<!-- Slide 9: Regression -->
+<div class="slide-container" id="slide9">
+    <h2 class="slide-title">Supervised Type A: Regression</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Predicting Numbers</h3>
+                <p>When the output label is a continuous number.</p>
+                <ul>
+                    <li>"What will be the revenue next quarter?"</li>
+                    <li>"How many minutes will this delivery take?"</li>
+                    <li>"What is the probability of failure?"</li>
+                </ul>
+            </div>
+            <div class="image-wrapper" style="background: white;">
+                <!-- Regression Explainer SVG -->
+                <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Axes -->
+                    <line x1="40" y1="170" x2="280" y2="170" stroke="#333" stroke-width="2"/>
+                    <line x1="40" y1="170" x2="40" y2="20" stroke="#333" stroke-width="2"/>
+                    <text x="270" y="190" font-size="12" font-family="Roboto">Input X</text>
+                    <text x="10" y="30" font-size="12" font-family="Roboto" transform="rotate(-90 10,30)">Value Y</text>
+
+                    <!-- Data Points -->
+                    <circle cx="60" cy="150" r="4" fill="#94a3b8"/>
+                    <circle cx="90" cy="130" r="4" fill="#94a3b8"/>
+                    <circle cx="120" cy="140" r="4" fill="#94a3b8"/>
+                    <circle cx="150" cy="90" r="4" fill="#94a3b8"/>
+                    <circle cx="180" cy="80" r="4" fill="#94a3b8"/>
+                    <circle cx="210" cy="60" r="4" fill="#94a3b8"/>
+
+                    <!-- Trend Line -->
+                    <line x1="40" y1="160" x2="260" y2="40" stroke="#0a6ed1" stroke-width="3"/>
+
+                    <!-- Prediction Action -->
+                    <line x1="230" y1="170" x2="230" y2="56" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,5"/>
+                    <line x1="230" y1="56" x2="40" y2="56" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,5"/>
+                    <circle cx="230" cy="56" r="6" fill="#f59e0b"/>
+                    
+                    <text x="235" y="160" font-size="12" fill="#f59e0b" font-weight="bold">New Input</text>
+                    <text x="50" y="50" font-size="12" fill="#f59e0b" font-weight="bold">Predicted Cost</text>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 10: Classification -->
+<div class="slide-container" id="slide10">
+    <h2 class="slide-title">Supervised Type B: Classification</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Predicting Categories</h3>
+                <p>When the output label is a distinct class or category.</p>
+                <ul>
+                    <li>"Is this email Spam or Not Spam?" (Binary)</li>
+                    <li>"Is this image a Cat, Dog, or Bird?" (Multi-class)</li>
+                    <li>"Will this customer Churn: Yes/No?"</li>
+                </ul>
+            </div>
+            <div class="image-wrapper" style="background: white;">
+                <!-- Classification Explainer SVG -->
+                <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Background Regions -->
+                    <path d="M40,170 L280,170 L280,20 L200,20 L40,120 Z" fill="#dbeafe" opacity="0.3"/> <!-- Blue Zone -->
+                    <path d="M40,170 L40,120 L200,20 L40,20 Z" fill="#ffedd5" opacity="0.3"/> <!-- Orange Zone -->
+                    
+                    <!-- Axes -->
+                    <line x1="40" y1="170" x2="280" y2="170" stroke="#333" stroke-width="2"/>
+                    <line x1="40" y1="170" x2="40" y2="20" stroke="#333" stroke-width="2"/>
+
+                    <!-- Group A (Orange Squares) -->
+                    <rect x="60" y="50" width="10" height="10" fill="#d97706"/>
+                    <rect x="80" y="40" width="10" height="10" fill="#d97706"/>
+                    <rect x="90" y="70" width="10" height="10" fill="#d97706"/>
+                    <rect x="65" y="90" width="10" height="10" fill="#d97706"/>
+
+                    <!-- Group B (Blue Circles) -->
+                    <circle cx="180" cy="140" r="6" fill="#0a6ed1"/>
+                    <circle cx="210" cy="130" r="6" fill="#0a6ed1"/>
+                    <circle cx="230" cy="150" r="6" fill="#0a6ed1"/>
+                    <circle cx="250" cy="100" r="6" fill="#0a6ed1"/>
+
+                    <!-- Decision Boundary -->
+                    <line x1="40" y1="120" x2="200" y2="20" stroke="#10b981" stroke-width="3" stroke-dasharray="8,4"/>
+                    <text x="140" y="60" font-size="12" fill="#10b981" transform="rotate(-32 140,60)" font-weight="bold">Decision Boundary</text>
+
+                    <!-- New Point -->
+                    <circle cx="220" cy="90" r="6" fill="#64748b" stroke="#333" stroke-width="2"/>
+                    <text x="230" y="85" font-size="12" fill="#333" font-weight="bold">New Data?</text>
+                    <path d="M220,96 L220,115 L235,115" stroke="#333" fill="none" marker-end="url(#arrow)"/>
+                    <text x="240" y="120" font-size="12" fill="#0a6ed1" font-style="italic">"It's Blue!"</text>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 11: Visual Comparison -->
+<div class="slide-container" id="slide11">
+    <h2 class="slide-title">Visualizing the Difference</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+                <h3>Regression</h3>
+                <p>Fitting a line through data points.</p>
+                <div style="height: 200px; width: 100%;">
+                     <!-- SVG Regression -->
+                     <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="20" y1="130" x2="180" y2="130" stroke="#ccc" />
+                        <line x1="20" y1="130" x2="20" y2="20" stroke="#ccc" />
+                        <!-- Points -->
+                        <circle cx="40" cy="110" r="3" fill="#94a3b8" />
+                        <circle cx="60" cy="100" r="3" fill="#94a3b8" />
+                        <circle cx="80" cy="85" r="3" fill="#94a3b8" />
+                        <circle cx="100" cy="90" r="3" fill="#94a3b8" />
+                        <circle cx="120" cy="60" r="3" fill="#94a3b8" />
+                        <circle cx="140" cy="50" r="3" fill="#94a3b8" />
+                        <circle cx="160" cy="30" r="3" fill="#94a3b8" />
+                        <!-- Regression Line -->
+                        <line x1="30" y1="120" x2="170" y2="35" stroke="#f59e0b" stroke-width="3" />
+                     </svg>
+                </div>
+            </div>
+            <div style="background: white; padding: 20px; border-radius: 8px;">
+                <h3>Classification</h3>
+                <p>Drawing a boundary to separate groups.</p>
+                 <div style="height: 200px; width: 100%;">
+                     <!-- SVG Classification -->
+                    <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="20" y1="130" x2="180" y2="130" stroke="#ccc" />
+                        <line x1="20" y1="130" x2="20" y2="20" stroke="#ccc" />
+                        <!-- Group A -->
+                        <rect x="40" y="90" width="6" height="6" fill="#d97706" />
+                        <rect x="50" y="100" width="6" height="6" fill="#d97706" />
+                        <rect x="60" y="80" width="6" height="6" fill="#d97706" />
+                        <rect x="35" y="110" width="6" height="6" fill="#d97706" />
+                        <!-- Group B -->
+                        <circle cx="120" cy="40" r="3" fill="#0a6ed1" />
+                        <circle cx="130" cy="50" r="3" fill="#0a6ed1" />
+                        <circle cx="140" cy="30" r="3" fill="#0a6ed1" />
+                        <circle cx="110" cy="60" r="3" fill="#0a6ed1" />
+                        <!-- Separator Line -->
+                        <line x1="70" y1="130" x2="140" y2="20" stroke="#10b981" stroke-width="3" stroke-dasharray="5,5" />
+                     </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 12: Unsupervised Deep Dive -->
+<div class="slide-container" id="slide12">
+    <h2 class="slide-title">Unsupervised Learning</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>The Pattern Finder</h3>
+                <p>We give the model data <strong>without</strong> labels.</p>
+                <p>"Here is a database of 10,000 customers. I don't know who is who. Please organize them."</p>
+                <p>The model looks for mathematical similarities and groups them.</p>
+            </div>
+            <div class="highlight-box">
+                <p><strong>Use Cases:</strong></p>
+                <ul>
+                    <li>Customer Segmentation (Marketing)</li>
+                    <li>Anomaly Detection (Cybersecurity)</li>
+                    <li>Recommendation Systems (People who bought A also bought B)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 13: Clustering Visual -->
+<div class="slide-container bleed-image-layout" id="slide13">
+    <div class="content-container">
+        <h2 class="slide-title">Clustering</h2>
+        <div class="content-area">
+            <h3>Finding Structure in Chaos</h3>
+            <p>K-Means Clustering is a popular algorithm. It automatically groups data points into "clusters" based on proximity.</p>
+            <p>In this visual, the algorithm has identified distinct groups without being told what they are.</p>
+        </div>
+    </div>
+    <div class="image-container">
+        <!-- SVG Clustering -->
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="300" fill="#f8fafc" />
+            
+            <!-- Cluster 1 -->
+            <circle cx="100" cy="100" r="40" fill="#0a6ed1" opacity="0.1" />
+            <circle cx="90" cy="90" r="5" fill="#0a6ed1" />
+            <circle cx="110" cy="110" r="5" fill="#0a6ed1" />
+            <circle cx="85" cy="115" r="5" fill="#0a6ed1" />
+            <circle cx="105" cy="85" r="5" fill="#0a6ed1" />
+            <circle cx="120" cy="100" r="5" fill="#0a6ed1" />
+            
+            <!-- Cluster 2 -->
+            <circle cx="300" cy="100" r="50" fill="#d97706" opacity="0.1" />
+            <circle cx="290" cy="90" r="5" fill="#d97706" />
+            <circle cx="310" cy="110" r="5" fill="#d97706" />
+            <circle cx="300" cy="120" r="5" fill="#d97706" />
+            <circle cx="280" cy="100" r="5" fill="#d97706" />
+            <circle cx="320" cy="80" r="5" fill="#d97706" />
+            <circle cx="305" cy="95" r="5" fill="#d97706" />
+
+            <!-- Cluster 3 -->
+            <circle cx="200" cy="220" r="45" fill="#10b981" opacity="0.1" />
+            <circle cx="190" cy="210" r="5" fill="#10b981" />
+            <circle cx="210" cy="230" r="5" fill="#10b981" />
+            <circle cx="200" cy="220" r="5" fill="#10b981" />
+            <circle cx="180" cy="225" r="5" fill="#10b981" />
+            <circle cx="220" cy="215" r="5" fill="#10b981" />
+        </svg>
+    </div>
+</div>
+
+<!-- Slide 14: Neural Networks Intro -->
+<div class="slide-container" id="slide14">
+    <h2 class="slide-title">Introduction to Neural Networks</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Inspired by the Brain</h3>
+                <p>Traditional algorithms (Linear Regression) are simple math equations.</p>
+                <p>Neural Networks attempt to mimic the human brain's structure: <strong>Neurons</strong> connected by <strong>Synapses</strong>.</p>
+                <p>They are excellent at finding complex, non-linear patterns.</p>
+            </div>
+            <div style="text-align: center;">
+                <i class="fa-solid fa-network-wired" style="font-size: 100px; color: #0a6ed1;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 15: How NN Works -->
+<div class="slide-container bleed-image-layout" id="slide15">
+    <div class="content-container">
+        <h2 class="slide-title">Architecture</h2>
+        <div class="content-area">
+            <ul>
+                <li><strong>Input Layer:</strong> Receives raw data (pixels of an image).</li>
+                <li><strong>Hidden Layers:</strong> The "Black Box" where magic happens. Weights are adjusted here.</li>
+                <li><strong>Output Layer:</strong> The final prediction (Cat vs Dog).</li>
+            </ul>
+        </div>
+    </div>
+    <div class="image-container">
+         <!-- SVG Neural Net -->
+         <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+             <!-- Edges -->
+             <line x1="50" y1="80" x2="150" y2="80" stroke="#cbd5e1" stroke-width="2" />
+             <line x1="50" y1="80" x2="150" y2="150" stroke="#cbd5e1" stroke-width="2" />
+             <line x1="50" y1="80" x2="150" y2="220" stroke="#cbd5e1" stroke-width="2" />
+             
+             <line x1="50" y1="150" x2="150" y2="80" stroke="#cbd5e1" stroke-width="2" />
+             <line x1="50" y1="150" x2="150" y2="150" stroke="#cbd5e1" stroke-width="2" />
+             <line x1="50" y1="150" x2="150" y2="220" stroke="#cbd5e1" stroke-width="2" />
+
+             <line x1="50" y1="220" x2="150" y2="80" stroke="#cbd5e1" stroke-width="2" />
+             <line x1="50" y1="220" x2="150" y2="150" stroke="#cbd5e1" stroke-width="2" />
+             <line x1="50" y1="220" x2="150" y2="220" stroke="#cbd5e1" stroke-width="2" />
+
+             <line x1="150" y1="80" x2="250" y2="110" stroke="#cbd5e1" stroke-width="2" />
+             <line x1="150" y1="80" x2="250" y2="190" stroke="#cbd5e1" stroke-width="2" />
+             <line x1="150" y1="150" x2="250" y2="110" stroke="#cbd5e1" stroke-width="2" />
+             <line x1="150" y1="150" x2="250" y2="190" stroke="#cbd5e1" stroke-width="2" />
+             <line x1="150" y1="220" x2="250" y2="110" stroke="#cbd5e1" stroke-width="2" />
+             <line x1="150" y1="220" x2="250" y2="190" stroke="#cbd5e1" stroke-width="2" />
+
+             <line x1="250" y1="110" x2="350" y2="150" stroke="#cbd5e1" stroke-width="2" />
+             <line x1="250" y1="190" x2="350" y2="150" stroke="#cbd5e1" stroke-width="2" />
+
+             <!-- Nodes Layer 1 -->
+             <circle cx="50" cy="80" r="20" fill="white" stroke="#0a6ed1" stroke-width="3" />
+             <circle cx="50" cy="150" r="20" fill="white" stroke="#0a6ed1" stroke-width="3" />
+             <circle cx="50" cy="220" r="20" fill="white" stroke="#0a6ed1" stroke-width="3" />
+             <text x="50" y="270" text-anchor="middle" font-size="12">Input</text>
+
+             <!-- Nodes Layer 2 -->
+             <circle cx="150" cy="80" r="20" fill="white" stroke="#0a6ed1" stroke-width="3" />
+             <circle cx="150" cy="150" r="20" fill="white" stroke="#0a6ed1" stroke-width="3" />
+             <circle cx="150" cy="220" r="20" fill="white" stroke="#0a6ed1" stroke-width="3" />
+             <text x="150" y="270" text-anchor="middle" font-size="12">Hidden</text>
+
+             <!-- Nodes Layer 3 -->
+             <circle cx="250" cy="110" r="20" fill="white" stroke="#0a6ed1" stroke-width="3" />
+             <circle cx="250" cy="190" r="20" fill="white" stroke="#0a6ed1" stroke-width="3" />
+             <text x="250" y="270" text-anchor="middle" font-size="12">Hidden</text>
+
+             <!-- Nodes Output -->
+             <circle cx="350" cy="150" r="20" fill="#0a6ed1" stroke="#0a6ed1" stroke-width="3" />
+             <text x="350" y="270" text-anchor="middle" font-size="12">Output</text>
+         </svg>
+    </div>
+</div>
+
+<!-- Slide 16: Deep Learning -->
+<div class="slide-container" id="slide16">
+    <h2 class="slide-title">Deep Learning</h2>
+    <div class="content-area">
+        <div class="highlight-box" style="margin-bottom: 30px; border-left-color: #f59e0b;">
+            <p style="font-size: 24px; font-weight: bold; margin: 0;">"Deep" just means "Many Layers"</p>
+        </div>
+        <p>When we stack many hidden layers, the network becomes "Deep".</p>
+        <p>This allows the model to learn a hierarchy of features:</p>
+        <ul>
+            <li><strong>Layer 1:</strong> Detects edges.</li>
+            <li><strong>Layer 2:</strong> Detects shapes (circles, squares).</li>
+            <li><strong>Layer 3:</strong> Detects complex objects (eyes, ears).</li>
+            <li><strong>Layer 4:</strong> Detects faces.</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Slide 17: Generative AI -->
+<div class="slide-container" id="slide17">
+    <h2 class="slide-title">Generative AI (GenAI)</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>From Discriminative to Generative</h3>
+                <p><strong>Traditional AI:</strong> Classifies existing data. (Is this a cat?)</p>
+                <p><strong>Generative AI:</strong> Creates NEW data. (Draw me a cat.)</p>
+                <p>It learns the underlying probability distribution of the data to generate new samples.</p>
+            </div>
+             <div class="image-wrapper">
+                <!-- Replaced with valid Unsplash URL for AI Art/Robot -->
+                <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80" alt="Generative AI Concept">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 18: Large Language Models -->
+<div class="slide-container" id="slide18">
+    <h2 class="slide-title">Large Language Models (LLMs)</h2>
+    <div class="content-area">
+        <h3>The Next Word Predictor</h3>
+        <p>Tools like GPT-4 or Gemini are LLMs.</p>
+        <p>They are trained on massive amounts of text (internet scale).</p>
+        <p>Fundamentally, they are just asking: <em>"Given the context 'The cat sat on the...', what is the most likely next word?"</em></p>
+        <div style="background: #e2e8f0; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center; font-family: monospace; font-size: 24px;">
+            Input: "SAP is the leader in enterprise..."<br>
+            Prediction: "software" (98%), "hardware" (1%)
+        </div>
+    </div>
+</div>
+
+<!-- Slide 19: Prompt Engineering -->
+<div class="slide-container" id="slide19">
+    <h2 class="slide-title">Prompt Engineering</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Coding in English</h3>
+                <p>With LLMs, the "code" is the instruction you write in natural language.</p>
+                <p><strong>Zero-shot:</strong> Asking without examples.</p>
+                <p><strong>Few-shot:</strong> Giving examples of what you want before asking.</p>
+                <p>This is a critical skill for modern SAP developers using GenAI Hub.</p>
+            </div>
+            <div style="background: #fefce8; border: 1px solid #fde047; padding: 20px; border-radius: 8px;">
+                <p style="font-weight: bold; color: #854d0e;">Prompt:</p>
+                <p style="font-family: monospace; color: #854d0e;">"Extract the invoice number and date from the following text and format it as JSON..."</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 20: The ML Lifecycle -->
+<div class="slide-container" id="slide20">
+    <h2 class="slide-title">The ML Lifecycle</h2>
+    <div class="content-area">
+        <p>Building AI is not a one-time event. It is a cycle.</p>
+        <div class="tiled-content">
+            <div class="tile">
+                <div class="icon">1</div>
+                <h3>Data</h3>
+                <p>Collect & Clean</p>
+            </div>
+            <div class="tile">
+                <div class="icon">2</div>
+                <h3>Train</h3>
+                <p>Teach the Model</p>
+            </div>
+            <div class="tile">
+                <div class="icon">3</div>
+                <h3>Evaluate</h3>
+                <p>Test Performance</p>
+            </div>
+            <div class="tile">
+                <div class="icon">4</div>
+                <h3>Deploy</h3>
+                <p>Integrate into App</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 21: Data Prep -->
+<div class="slide-container bleed-image-layout" id="slide21">
+    <div class="content-container">
+        <h2 class="slide-title">Step 1: Data Preparation</h2>
+        <div class="content-area">
+            <h3>80% of the Work</h3>
+            <p>Real-world data is messy. It has typos, missing values, and duplicates.</p>
+            <p><strong>Splitting:</strong> We always split data into:</p>
+            <ul>
+                <li><strong>Training Set (80%):</strong> To teach the model.</li>
+                <li><strong>Test Set (20%):</strong> To grade the model (hidden during training).</li>
+            </ul>
+        </div>
+    </div>
+    <div class="image-container">
+        <!-- Replaced with valid Unsplash URL for Data Cleaning/Analysis -->
+        <img class="bleed-image-side" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80" alt="Data analysis and cleaning concept">
+    </div>
+</div>
+
+<!-- Slide 22: Evaluation Metrics -->
+<div class="slide-container" id="slide22">
+    <h2 class="slide-title">Step 3: Evaluation Metrics</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>How do we know it works?</h3>
+                <p>We don't just guess. We use metrics.</p>
+                <ul>
+                    <li><strong>Accuracy:</strong> % of correct predictions. (Good for balanced data).</li>
+                    <li><strong>Precision:</strong> "Of all the emails we called Spam, how many were actually Spam?" (Quality).</li>
+                    <li><strong>Recall:</strong> "Of all the actual Spam, how many did we find?" (Quantity).</li>
+                </ul>
+            </div>
+            <div style="text-align: center;">
+                <i class="fa-solid fa-bullseye" style="font-size: 100px; color: #dc2626;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 23: Overfitting -->
+<div class="slide-container bleed-image-layout" id="slide23">
+    <div class="content-container">
+        <h2 class="slide-title">The Danger: Overfitting</h2>
+        <div class="content-area">
+            <h3>Memorizing vs Learning</h3>
+            <p><strong>Overfitting:</strong> The model memorizes the training data perfectly (including the noise) but fails on new data.</p>
+            <p>It's like a student who memorizes the textbook answers but fails the test when the questions are slightly different.</p>
+            <p>We want the "Goldilocks" zone: Good fit.</p>
+        </div>
+    </div>
+    <div class="image-container">
+         <!-- SVG Overfitting Graph -->
+         <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="300" fill="#f8fafc" />
+            
+            <!-- Axes -->
+            <line x1="50" y1="250" x2="350" y2="250" stroke="#333" stroke-width="2" />
+            <line x1="50" y1="250" x2="50" y2="50" stroke="#333" stroke-width="2" />
+            <text x="340" y="270" font-size="12">Complexity</text>
+            <text x="20" y="60" font-size="12" transform="rotate(-90 20,60)">Error</text>
+            
+            <!-- Training Error (Decreasing) -->
+            <path d="M50 200 Q 150 180 350 80" fill="none" stroke="#10b981" stroke-width="3" />
+            <text x="300" y="70" fill="#10b981" font-weight="bold">Training Error</text>
+
+            <!-- Test Error (U-Shape) -->
+            <path d="M50 180 Q 200 120 350 220" fill="none" stroke="#ef4444" stroke-width="3" />
+            <text x="300" y="210" fill="#ef4444" font-weight="bold">Test Error</text>
+
+            <!-- Optimal Point -->
+            <line x1="200" y1="50" x2="200" y2="250" stroke="#666" stroke-dasharray="5,5" />
+            <text x="170" y="40" fill="#666">Optimal Fit</text>
+            <text x="280" y="240" fill="#ef4444" font-size="12">Overfitting Zone</text>
+         </svg>
+    </div>
+</div>
+
+<!-- Slide 24: Ethics and Bias -->
+<div class="slide-container bleed-image-layout" id="slide24">
+    <div class="content-container">
+        <h2 class="slide-title">Ethics & Bias</h2>
+        <div class="content-area">
+            <h3>The Enterprise Risk</h3>
+            <p>If your training data is biased, your model will be biased.</p>
+            <p>Example: If you only train a hiring bot on resumes from men, it will learn to reject women.</p>
+            <p>In SAP context, this is critical. We must ensure AI is <strong>Fair, Explainable, and Transparent</strong>.</p>
+        </div>
+    </div>
+    <div class="image-container">
+        <!-- Replaced with valid Unsplash URL for Ethics/Law -->
+        <img class="bleed-image-side" src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=1000&q=80" alt="Scales of Justice representing Ethics">
+    </div>
+</div>
+
+<!-- Slide 25: Hallucinations -->
+<div class="slide-container" id="slide25">
+    <h2 class="slide-title">GenAI Risks: Hallucinations</h2>
+    <div class="content-area">
+        <div class="highlight-box" style="border-color: #ef4444; background: #fef2f2;">
+            <p style="color: #b91c1c; font-weight: bold;">"Confident but Wrong"</p>
+        </div>
+        <p style="margin-top: 20px;">LLMs are designed to generate plausible text, not truthful text.</p>
+        <p>They can invent facts, cite fake laws, or make up numbers ("Hallucinations").</p>
+        <p><strong>Mitigation:</strong> Grounding (RAG). Feeding the model real company data and telling it "Only answer based on this context".</p>
+    </div>
+</div>
+
+<!-- Slide 26: Transition to SAP -->
+<div class="slide-container full-bg-image" id="slide26" style="background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center;">
+    <div class="title-layout">
+        <h1 style="color: white;">The SAP Connection</h1>
+        <p class="subtitle" style="color: #bae6fd;">Applying AI to Business</p>
+    </div>
+</div>
+
+<!-- Slide 27: The Intelligent Enterprise -->
+<div class="slide-container" id="slide27">
+    <h2 class="slide-title">The Intelligent Enterprise</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Moving Beyond Transactional</h3>
+                <p>SAP used to be about recording data (Who bought what?).</p>
+                <p>The "Intelligent Enterprise" is about <strong>prediction and automation</strong>.</p>
+                <ul>
+                    <li>Don't just record a breakdown -> <strong>Predict it.</strong></li>
+                    <li>Don't just record an invoice -> <strong>Read it automatically.</strong></li>
+                </ul>
+            </div>
+            <div style="text-align: center;">
+                <i class="fa-solid fa-chart-line" style="font-size: 100px; color: #0a6ed1;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 28: Embedded vs Side-by-Side -->
+<div class="slide-container" id="slide28">
+    <h2 class="slide-title">Two Ways SAP uses AI</h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div style="background: #f0f9ff;">
+                <h3>1. Embedded AI</h3>
+                <p>AI that comes "in the box" with S/4HANA or SuccessFactors.</p>
+                <p><em>Example: Cash Application predicting matched payments.</em></p>
+                <p><strong>You configure it.</strong></p>
+            </div>
+            <div style="background: #fffbeb;">
+                <h3>2. Side-by-Side (BTP)</h3>
+                <p>Custom AI built on the Business Technology Platform (BTP).</p>
+                <p><em>Example: A custom visual inspection model for your specific product.</em></p>
+                <p><strong>You build it (using Python!).</strong></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 29: Use Case: Finance -->
+<div class="slide-container" id="slide29">
+    <h2 class="slide-title">Use Case: Finance</h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                <h3>Intelligent Receivables</h3>
+                <p>Matching incoming bank payments to open invoices automatically using ML matching algorithms.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-credit-card"></i></div>
+                <h3>Fraud Detection</h3>
+                <p>Identifying anomalous expense reports or procurement patterns that deviate from the norm.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 30: Use Case: Supply Chain -->
+<div class="slide-container" id="slide30">
+    <h2 class="slide-title">Use Case: Supply Chain</h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-truck-fast"></i></div>
+                <h3>Demand Sensing</h3>
+                <p>Using weather, trends, and history to predict exactly how much inventory is needed next week.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                <h3>Predictive Maintenance</h3>
+                <p>Listening to machine vibrations to predict failure before it happens, saving downtime.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 31: Why Learn This? -->
+<div class="slide-container bleed-image-layout" id="slide31">
+    <div class="content-container">
+        <h2 class="slide-title">Why Learn This?</h2>
+        <div class="content-area">
+            <h3>Bridging the Gap</h3>
+            <p>Pure Data Scientists often don't understand SAP Business Processes.</p>
+            <p>Pure ABAP Developers often don't understand Machine Learning.</p>
+            <p><strong>You are the bridge.</strong> By knowing Python + AI Concepts + SAP context, you become uniquely valuable.</p>
+        </div>
+    </div>
+    <div class="image-container">
+        <!-- Replaced with valid Unsplash URL for Collaboration -->
+        <img class="bleed-image-side" src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1000&q=80" alt="Future of work collaboration">
+    </div>
+</div>
+
+<!-- Slide 32: The Future Developer -->
+<div class="slide-container" id="slide32">
+    <h2 class="slide-title">The Future SAP Developer</h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile">
+                <div class="icon"><i class="fa-brands fa-python"></i></div>
+                <h3>Python</h3>
+                <p>For Data Science & AI Logic.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-cloud"></i></div>
+                <h3>BTP</h3>
+                <p>For Cloud Deployment.</p>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-comments"></i></div>
+                <h3>Prompting</h3>
+                <p>For interacting with GenAI.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 33: Summary -->
+<div class="slide-container" id="slide33">
+    <h2 class="slide-title">Summary</h2>
+    <div class="content-area">
+        <ul>
+            <li><strong>AI/ML</strong> is about learning rules from data.</li>
+            <li><strong>Supervised Learning</strong> (Labels) covers most business use cases today.</li>
+            <li><strong>Generative AI</strong> is the new frontier for content and interaction.</li>
+            <li><strong>Python</strong> is your tool to build these models.</li>
+            <li><strong>SAP</strong> provides the business context and the platform (BTP) to run them.</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Slide 34: Next Steps -->
+<div class="slide-container" id="slide34">
+    <h2 class="slide-title">Next Steps</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Keep Practicing</h3>
+                <ol>
+                    <li>Master Pandas (Data handling).</li>
+                    <li>Try Scikit-Learn (Basic ML).</li>
+                    <li>Explore the "SAP AI Core" documentation.</li>
+                </ol>
+            </div>
+            <div class="highlight-box">
+                <p style="font-weight: bold; font-size: 24px;">"The best way to learn machine learning is to build machine learning."</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 35: Q&A -->
+<div class="slide-container" id="slide35">
+    <div class="title-layout">
+        <h1>Questions?</h1>
+        <p class="subtitle">Open Floor Discussion</p>
+        <div style="margin-top: 50px; font-size: 60px; color: #0a6ed1;">
+            <i class="fa-solid fa-comments"></i>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
