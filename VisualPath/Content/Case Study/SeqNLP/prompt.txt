@@ -1,0 +1,42 @@
+
+update and create a new py file.
+avoid the display of plot until final version is finalized.
+
+Show me the progress on terminal exectuion as and when u are execting each step
+
+
+
+
+OBJECTIVE:
+Optimize the sequential NLP models to achieve the following performance hierarchy:
+LSTM Model > RNN Model > Dense Model
+
+REQUIREMENTS:
+1. Model Performance:
+   - Implement and train three neural network architectures: LSTM, RNN, and Dense
+   - Ensure LSTM consistently outperforms RNN, which outperforms Dense
+   - Optimize hyperparameters (learning rate, batch size, epochs, layer sizes, dropout, etc.)
+   - Use appropriate evaluation metrics (accuracy, loss, F1-score, etc.)
+
+2. Reproducibility & Validation:
+   - Set random seeds (NumPy, TensorFlow, Python) for deterministic results
+   - Run the complete training pipeline 2-3 times independently
+   - Compare results across runs to ensure consistency and statistical significance
+   - Document performance metrics for each run
+
+3. Implementation Flexibility:
+   - You may adjust hyperparameters, network architecture, and training strategies
+   - You may modify or augment the dataset if needed
+   - You may incorporate additional data sources or preprocessing techniques
+   - You may implement early stopping, learning rate scheduling, or other optimization strategies
+
+SUCCESS CRITERIA:
+- LSTM performance > RNN performance > Dense performance (across all test runs)
+- Results are reproducible and consistent when code is run multiple times
+- Clear performance metrics and comparison results documented
+- Code is optimized and efficient
+
+DELIVERABLES:
+- Working Python script with all three models
+- Reproducible results showing performance comparison
+- Validation report confirming results across multiple runs
